@@ -18,8 +18,7 @@ export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxN
 
 
 
-    console.log(settingsMaxNumber)
-    console.log(settingsMinNumber)
+
 
     return (
         <div className={s.wrapper}>
