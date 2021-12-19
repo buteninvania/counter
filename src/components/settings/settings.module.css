@@ -1,0 +1,32 @@
+.wrapper {
+    border: 2px solid #111;
+    background-color: #075766;
+    color: #bccbcb;
+    position: absolute;
+    left: 0;
+    top: 19px;
+    padding: 5px;
+    font-size: 15px;
+    width: 30%;
+}
+
+.control {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 5px;
+}
+
+.control button {
+    font-size: 15px;
+    width: 20%;
+}
+
+.conservation {
+    display: flex;
+    justify-content: space-around;
+}
+
+.conservation button {
+    font-size: 15px;
+    width: 40%;
+}

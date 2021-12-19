@@ -1,0 +1,21 @@
+button {
+    width: 30%;
+    height: 60%;
+    font-size: 30px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.default {
+    background-color: #84ece3;
+}
+
+.error {
+    background-color: crimson;
+}
+
+@media (max-width: 670px) {
+    .default {
+        font-size: 15px;
+    }
+}
