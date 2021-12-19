@@ -1,5 +1,5 @@
 /***********************Settings**************************/
-import React, {useEffect, useState} from 'react';
+import React ,{useEffect, useState} from 'react';
 import s from './settings.module.css'
 import Button from '../button/Button';
 import {SpanError} from '../error/Error';
