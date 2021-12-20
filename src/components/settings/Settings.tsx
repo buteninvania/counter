@@ -16,7 +16,7 @@ export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxN
     const [settingsMaxNumber, setSettingsMaxNumber] = useState(0)
     const [settingsMinNumber, setSettingsMinNumber] = useState(0)
 
-
+    console.log(settingsMaxNumber)
 
 
 
