@@ -1,5 +1,5 @@
 /***********************Settings**************************/
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import s from './settings.module.css'
 import Button from '../button/Button';
 import {SpanError} from '../error/Error';
@@ -7,6 +7,19 @@ import {CounterActionsType} from '../counter/counter_types';
 import {counterActions} from '../counter/counterReducer';
 
 export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxNumber, error, onClickSettings}) => {
+
+    useEffect(() => {
+        setSettingsMaxNumber(maxNumber)
+        setSettingsMinNumber(minNumber)
+    },[])
+
+    const [settingsMaxNumber, setSettingsMaxNumber] = useState(0)
+    const [settingsMinNumber, setSettingsMinNumber] = useState(0)
+
+
+
+    console.log(settingsMaxNumber)
+    console.log(settingsMinNumber)
 
     return (
         <div className={s.wrapper}>
