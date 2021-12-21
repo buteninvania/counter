@@ -5,7 +5,6 @@ export const counterInitialState: CounterStateType = {
     maxNumber: 5,
     minNumber:0,
     counterNumber: 0,
-    error: ''
 }
 
 export const counterReducer = (state: CounterStateType, action: CounterActionsType): CounterStateType => {
@@ -17,8 +16,6 @@ export const counterReducer = (state: CounterStateType, action: CounterActionsTy
             return {...state, isShowSettings: !state.isShowSettings}
         case Types.SetCounterNumber:
             return {...state, [action.payload.mutableKey]: action.payload.value}
-        case Types.SetError:
-            return {...state, error: action.payload.message}
     }
     return state
 }
@@ -35,9 +32,5 @@ export const counterActions = {
     setValueNumberActionCreator: (mutableKey: MutableKeyType, value: number) => ({
         type: Types.SetCounterNumber,
         payload: {mutableKey, value}
-    } as const),
-    setErrorActionCreator: (message: string) => ({
-        type: Types.SetError,
-        payload: {message}
     } as const),
 }

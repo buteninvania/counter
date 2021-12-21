@@ -7,8 +7,6 @@ import {counterActions, counterInitialState, counterReducer} from './counterRedu
 
 const Counter: React.FC<CounterPropsType> = ({}) => {
 
-    console.log('render')
-
     useEffect(() => {
         const max = Number(localStorage.getItem('maxValue'))
         const min = Number(localStorage.getItem('minValue'))
@@ -21,17 +19,16 @@ const Counter: React.FC<CounterPropsType> = ({}) => {
 
     const [state, dispatch] = useReducer(counterReducer, counterInitialState)
 
-    useEffect(() => {
-        state.minNumber >= state.maxNumber ? dispatch(counterActions.setErrorActionCreator('Invalid value')) :
-                                             dispatch(counterActions.setErrorActionCreator(''))
-    }, [state.maxNumber, state.minNumber])
-
-    const onClickSettings = (type: string) => {
+    const onClickSettingsHandler = (type: string, settingsMinNumber:number, settingsMaxNumber:number) => {
         if(state.isShowSettings && type === "Apply") {
-            dispatch(counterActions.setValueNumberActionCreator('counterNumber', state.minNumber))
+            dispatch(counterActions.setValueNumberActionCreator('counterNumber', settingsMinNumber))
+            dispatch(counterActions.setValueNumberActionCreator('minNumber', settingsMinNumber))
+            dispatch(counterActions.setValueNumberActionCreator('maxNumber', settingsMaxNumber))
         } else if(state.isShowSettings){
             dispatch(counterActions.toggleIsSowSettingsActionCreator())
-            dispatch(counterActions.setValueNumberActionCreator('counterNumber', state.minNumber))
+            dispatch(counterActions.setValueNumberActionCreator('counterNumber', settingsMinNumber))
+            dispatch(counterActions.setValueNumberActionCreator('minNumber', settingsMinNumber))
+            dispatch(counterActions.setValueNumberActionCreator('maxNumber', settingsMaxNumber))
             localStorage.setItem('maxValue', JSON.stringify(state.maxNumber))
             localStorage.setItem('minValue', JSON.stringify(state.minNumber))
         } else {
@@ -42,30 +39,30 @@ const Counter: React.FC<CounterPropsType> = ({}) => {
     return (
         <div className={s.counterWrapper}>
             <div className={s.header}>
-                <span className={state.isShowSettings ? s.active : ''} onClick={(e) => onClickSettings(e.currentTarget.innerHTML)}>settings</span>
+                <span className={state.isShowSettings ? s.active : ''}
+                      onClick={() => dispatch(counterActions.toggleIsSowSettingsActionCreator())}>
+                    settings
+                </span>
             </div>
             <div className={state.counterNumber === state.maxNumber ? s.counter + ' ' + s.red : s.counter}>
                 {state.counterNumber}
             </div>
             <div className={s.buttonsWrapper}>
                 <Button children={'inc'}
-                        disabled={state.counterNumber>=state.maxNumber || !!state.error}
+                        disabled={state.counterNumber>=state.maxNumber}
                         className={s.btn}
                         onClick={()=>dispatch(counterActions.changingValueNumberActionCreator('counterNumber', 'inc'))}/>
                 <Button children={'reset'}
-                        disabled={state.counterNumber===state.minNumber || !!state.error}
+                        disabled={state.counterNumber===state.minNumber}
                         className={s.btn}
                         onClick={()=>dispatch(counterActions.setValueNumberActionCreator('counterNumber', state.minNumber))}/>
             </div>
             {state.isShowSettings && <Settings maxNumber={state.maxNumber}
                                          minNumber={state.minNumber}
-                                         onClickSettings={onClickSettings}
-                                         error={state.error}
-                                         dispatch={dispatch}/>}
+                                         onClickSettings={onClickSettingsHandler}/>}
             <div className={s.footer}>
                 <span>Minimum value: {state.minNumber}</span>
                 <span>Maximum value: {state.maxNumber}</span>
-
             </div>
         </div>
 

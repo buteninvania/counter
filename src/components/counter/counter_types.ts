@@ -3,7 +3,6 @@ export type CounterStateType = {
     maxNumber: number
     minNumber: number
     counterNumber: number
-    error: string
 }
 
 type ActionMap<M extends { [index: string]: any }> = {
@@ -21,7 +20,6 @@ export enum Types {
     Change = "CHANGING-VALUE-NUMBER",
     ToggleShowSettings = 'TOGGLE-IS-SHOW-SETTINGS',
     SetCounterNumber = 'SET-COUNTER-NUMBER',
-    SetError = 'SET-ERROR'
 }
 
 export type MutableKeyType = "maxNumber" | "minNumber" | "counterNumber"
@@ -32,9 +30,6 @@ type CounterPayload = {
     [Types.SetCounterNumber]: {
         mutableKey: MutableKeyType
         value: number
-    },
-    [Types.SetError]: {
-        message: string
     },
     [Types.Change]: {
         value: MutableKeyType

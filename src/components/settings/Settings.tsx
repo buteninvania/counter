@@ -4,9 +4,8 @@ import s from './settings.module.css'
 import Button from '../button/Button';
 import {SpanError} from '../error/Error';
 import {CounterActionsType} from '../counter/counter_types';
-import {counterActions} from '../counter/counterReducer';
 
-export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxNumber, error, onClickSettings}) => {
+export const Settings: React.FC<SettingsPropsType> = ({minNumber, maxNumber, onClickSettings}) => {
 
     useEffect(() => {
         setSettingsMaxNumber(maxNumber)
@@ -15,10 +14,27 @@ export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxN
 
     const [settingsMaxNumber, setSettingsMaxNumber] = useState(0)
     const [settingsMinNumber, setSettingsMinNumber] = useState(0)
+    const [settingsError, setSettingsError] = useState('')
 
-    console.log(settingsMaxNumber)
+    const changingValueNumberHandler = (stateValue: 'min' | 'max', type: 'inc' | 'dec') => {
+        if(type === 'dec') {
+            stateValue === 'min' ? setSettingsMinNumber(settingsMinNumber - 1) :
+                                   setSettingsMaxNumber(settingsMaxNumber - 1)
+        }
+        if(type === 'inc') {
+            stateValue === 'min' ? setSettingsMinNumber(settingsMinNumber + 1) :
+                                   setSettingsMaxNumber(settingsMaxNumber + 1)
+        }
+    }
 
+    useEffect(() => {
+        if(settingsMaxNumber <= settingsMinNumber) {
+            setSettingsError('Invalid value')
+        } else {
+            setSettingsError('')
+        }
 
+    },[settingsMaxNumber, settingsMinNumber])
 
     return (
         <div className={s.wrapper}>
@@ -26,37 +42,41 @@ export const Settings: React.FC<SettingsPropsType> = ({dispatch, minNumber, maxN
             <div className={s.control}>
                 <span>Min value:</span>
                 <Button children={"-"}
-                        disabled={minNumber === 0}
-                        onClick={() => dispatch(counterActions.changingValueNumberActionCreator('minNumber', 'dec')) }/>
-                <span>{minNumber}</span>
+                        disabled={settingsMinNumber === 0}
+                        onClick={() => changingValueNumberHandler('min', 'dec')}/>
+                <span>{settingsMinNumber}</span>
                 <Button children={"+"}
-                        error={!!error}
-                        onClick={() => dispatch(counterActions.changingValueNumberActionCreator('minNumber', 'inc'))}/>
+                        error={!!settingsError}
+                        onClick={() => changingValueNumberHandler('min', 'inc')}/>
             </div>
             <div className={s.control}>
                 <span>Max value:</span>
                 <Button children={"-"}
-                        error={!!error}
-                        onClick={() => dispatch(counterActions.changingValueNumberActionCreator('maxNumber', 'dec'))}/>
-                <span>{maxNumber}</span>
+                        error={!!settingsError}
+                        onClick={() => changingValueNumberHandler('max', 'dec')}/>
+                <span>{settingsMaxNumber}</span>
                 <Button children={"+"}
-                        onClick={() => dispatch(counterActions.changingValueNumberActionCreator('maxNumber', 'inc'))}/>
+                        onClick={() => changingValueNumberHandler('max', 'inc')}/>
             </div>
             <div className={s.conservation}>
-                <Button onClick={(e) => onClickSettings(e.currentTarget.innerHTML)} disabled={!!error}>Apply</Button>
-                <Button onClick={(e) => onClickSettings(e.currentTarget.innerHTML)} disabled={!!error}>Save</Button>
+                <Button onClick={(e) => onClickSettings(e.currentTarget.innerHTML, settingsMinNumber, settingsMaxNumber)}
+                        disabled={!!settingsError}>
+                    Apply
+                </Button>
+                <Button onClick={(e) => onClickSettings(e.currentTarget.innerHTML, settingsMinNumber, settingsMaxNumber)}
+                        disabled={!!settingsError}>
+                    Save
+                </Button>
             </div>
-            {error && <SpanError message={error}/>}
+            {settingsError && <SpanError message={settingsError}/>}
         </div>
     )
 }
 
 type SettingsPropsType = {
-    dispatch:  React.Dispatch<CounterActionsType>
     minNumber: number
     maxNumber: number
-    error: string
-    onClickSettings:(type: string) => void
+    onClickSettings:(type: string, minNumber: number, maxNumber: number) => void
 }
 
 

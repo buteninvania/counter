@@ -8,7 +8,6 @@ test('The setting menu display value should change', () => {
         maxNumber: 5,
         minNumber:0,
         counterNumber: 0,
-        error: ''
     }
 
     //action:
@@ -27,7 +26,6 @@ test('The value of the maximum number should increase', () => {
         maxNumber: 5,
         minNumber:0,
         counterNumber: 0,
-        error: ''
     }
 
     //action:
@@ -46,7 +44,6 @@ test('The counter value should change', () => {
         maxNumber: 5,
         minNumber:1,
         counterNumber: 0,
-        error: ''
     }
 
     //action:
@@ -58,21 +55,3 @@ test('The counter value should change', () => {
     expect(changedState).not.toBe(initialState)
 })
 
-test('An error should appear', () => {
-    //data:
-    const initialState: CounterStateType = {
-        isShowSettings: false,
-        maxNumber: 5,
-        minNumber:1,
-        counterNumber: 0,
-        error: ''
-    }
-
-    //action:
-    const changedState = counterReducer(initialState, counterActions.setErrorActionCreator("Wrong number"))
-
-    //exception:
-    expect(changedState.error).toBe("Wrong number")
-    expect(initialState.error).toBe("")
-    expect(changedState).not.toBe(initialState)
-})
