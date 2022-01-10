@@ -1,5 +1,5 @@
-import {CounterStateType} from './counter_types';
-import {counterActions, counterReducer} from './counterReducer';
+import { CounterStateType } from "./counter-reducer.types"
+import {counterActions, counterReducer} from './counter-reducer';
 
 test('The setting menu display value should change', () => {
     //data:

@@ -3,34 +3,31 @@ import React, {useEffect, useReducer} from 'react';
 import Button from '../button/Button';
 import {Settings} from '../settings/Settings';
 import s from './counter.module.css'
-import {counterActions, counterInitialState, counterReducer} from './counterReducer';
+import {useDispatch, useSelector} from 'react-redux';
+import {counterActions} from '../../brms/counter/counter-reducer';
+import {AppStateType} from '../../brms/store';
+import {SettingsStateType} from '../../brms/settings/settings-reducer.types';
+import {CounterStateType} from '../../brms/counter/counter-reducer.types';
 
 const Counter: React.FC<CounterPropsType> = ({}) => {
 
-    useEffect(() => {
-        const max = Number(localStorage.getItem('maxValue'))
-        const min = Number(localStorage.getItem('minValue'))
-        if(min || max){
-            dispatch(counterActions.setValueNumberActionCreator('minNumber', min))
-            dispatch(counterActions.setValueNumberActionCreator('counterNumber', min))
-            dispatch(counterActions.setValueNumberActionCreator('maxNumber', max))
-        }
-    }, [])
+    const dispatch = useDispatch()
 
-    const [state, dispatch] = useReducer(counterReducer, counterInitialState)
+    const {counterNumber, maxNumber, isShowSettings, minNumber} = useSelector<AppStateType, CounterStateType>(state => state.counter)
+    const settingsData = useSelector<AppStateType, SettingsStateType>(state => state.settings)
 
     const onClickSettingsHandler = (type: string, settingsMinNumber:number, settingsMaxNumber:number) => {
-        if(state.isShowSettings && type === "Apply") {
+        if(isShowSettings && type === "Apply") {
             dispatch(counterActions.setValueNumberActionCreator('counterNumber', settingsMinNumber))
             dispatch(counterActions.setValueNumberActionCreator('minNumber', settingsMinNumber))
             dispatch(counterActions.setValueNumberActionCreator('maxNumber', settingsMaxNumber))
-        } else if(state.isShowSettings){
+        } else if(isShowSettings){
             dispatch(counterActions.toggleIsSowSettingsActionCreator())
             dispatch(counterActions.setValueNumberActionCreator('counterNumber', settingsMinNumber))
             dispatch(counterActions.setValueNumberActionCreator('minNumber', settingsMinNumber))
             dispatch(counterActions.setValueNumberActionCreator('maxNumber', settingsMaxNumber))
-            localStorage.setItem('maxValue', JSON.stringify(state.maxNumber))
-            localStorage.setItem('minValue', JSON.stringify(state.minNumber))
+            localStorage.setItem('maxValue', JSON.stringify(maxNumber))
+            localStorage.setItem('minValue', JSON.stringify(minNumber))
         } else {
             dispatch(counterActions.toggleIsSowSettingsActionCreator())
         }
@@ -39,36 +36,37 @@ const Counter: React.FC<CounterPropsType> = ({}) => {
     return (
         <div className={s.counterWrapper}>
             <div className={s.header}>
-                <span className={state.isShowSettings ? s.active : ''}
+                <span className={isShowSettings ? s.active : ''}
                       onClick={() => dispatch(counterActions.toggleIsSowSettingsActionCreator())}>
                     settings
                 </span>
             </div>
-            <div className={state.counterNumber === state.maxNumber ? s.counter + ' ' + s.red : s.counter}>
-                {state.counterNumber}
+            <div className={counterNumber === maxNumber ? s.counter + ' ' + s.red : s.counter}>
+                {counterNumber}
             </div>
             <div className={s.buttonsWrapper}>
                 <Button children={'inc'}
-                        disabled={state.counterNumber>=state.maxNumber}
+                        disabled={counterNumber>=maxNumber}
                         className={s.btn}
                         onClick={()=>dispatch(counterActions.changingValueNumberActionCreator('counterNumber', 'inc'))}/>
                 <Button children={'reset'}
-                        disabled={state.counterNumber===state.minNumber}
+                        disabled={counterNumber===minNumber}
                         className={s.btn}
-                        onClick={()=>dispatch(counterActions.setValueNumberActionCreator('counterNumber', state.minNumber))}/>
+                        onClick={()=>dispatch(counterActions.setValueNumberActionCreator('counterNumber', minNumber))}/>
             </div>
-            {state.isShowSettings && <Settings maxNumber={state.maxNumber}
-                                         minNumber={state.minNumber}
-                                         onClickSettings={onClickSettingsHandler}/>}
+            {isShowSettings && <Settings settingsData={settingsData} onClickSettings={onClickSettingsHandler}/>}
             <div className={s.footer}>
-                <span>Minimum value: {state.minNumber}</span>
-                <span>Maximum value: {state.maxNumber}</span>
+                <span>Minimum value: {minNumber}</span>
+                <span>Maximum value: {maxNumber}</span>
             </div>
         </div>
 
     )
 }
 
-type CounterPropsType = {}
+type CounterPropsType = {
+
+}
+
 export default Counter
 /**********************************************************/
